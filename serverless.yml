@@ -1,7 +1,7 @@
 service: progimage
 
 package:
-  exclude:    
+  exclude:
     - coverage
     - tests
 
@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
-  region: eu-west-2	
+  region: eu-west-2
   deploymentBucket:
     name: serverless-lambdas-deployments
   logRetentionInDays: 30
@@ -18,13 +18,13 @@ provider:
     DEBUG: ${file(./${self:provider.stage}.yml):DEBUG}
     stage: ${self:provider.stage}
     bucketName: progimage-${self:provider.stage}-uploads
-    
+
   iamRoleStatements:
-    - Effect: "Allow"
+    - Effect: 'Allow'
       Action:
-        - "s3:Get*"
-        - "s3:Put*"
-      Resource: arn:aws:s3:::progimage-${self:provider.stage}-uploads/* 
+        - 's3:Get*'
+        - 's3:Put*'
+      Resource: arn:aws:s3:::progimage-${self:provider.stage}-uploads/*
 
 functions:
   ping:
@@ -35,8 +35,17 @@ functions:
       - http:
           path: /upload
           method: post
+  retrieve:
+    handler: src/handler.retrieve
+    events:
+      - http:
+          path: /retrieve
+          method: get
+          contentHandling: CONVERT_TO_BINARY
 plugins:
   - serverless-plugin-create-deployment-bucket
+  - serverless-apigw-binary
+  - serverless-apigwy-binary
 
 resources:
   Resources:
@@ -44,3 +53,8 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: progimage-${self:provider.stage}-uploads
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
