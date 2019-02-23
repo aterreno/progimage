@@ -1,7 +1,10 @@
 const AWS = require('aws-sdk');
 const debug = require('debug')('handler');
 const uuid = require('uuid/v1');
-const { jsonResponse, pngResponse } = require('./util/http');
+const sharp = require('sharp');
+
+const legitTransformations = ['png', 'jpeg', 'tiff', 'webp'];
+const { jsonResponse, imgResponse } = require('./util/http');
 
 const { bucketName } = process.env;
 const s3 = new AWS.S3();
@@ -35,7 +38,26 @@ const retrieve = async (event, context, callback) => {
     const { fileName } = event.queryStringParameters;
     try {
       const { Body: body } = await s3.getObject({ Bucket: bucketName, Key: fileName }).promise();
-      callback(null, pngResponse(200, body.toString('base64')));
+
+      if (event.queryStringParameters.convertTo) {
+        const { convertTo } = event.queryStringParameters;
+        if (legitTransformations.includes(convertTo)) {
+          const converted = await sharp(body)
+            .toFormat(convertTo)
+            .toBuffer();
+          callback(null, imgResponse(200, converted.toString('base64'), convertTo));
+        } else {
+          callback(
+            null,
+            jsonResponse(
+              400,
+              `Invalid conversion format: ${convertTo}, only: ${legitTransformations.join(',')} are allowed`
+            )
+          );
+        }
+      } else {
+        callback(null, imgResponse(200, body.toString('base64')), 'png');
+      }
     } catch (error) {
       debug(error);
       callback(null, jsonResponse(error.statusCode, { message: error.message }));

@@ -6,13 +6,16 @@ const jsonResponse = (statusCode, body) => {
   };
 };
 
-const pngResponse = (statusCode, body) => {
+const imgResponse = (statusCode, body, type) => {
   return {
     statusCode,
-    headers: { 'Content-Type': 'image/png' },
+    headers: { 'Content-Type': `image/${type}` },
     isBase64Encoded: true,
     body,
   };
 };
 
-module.exports = { jsonResponse, pngResponse };
+module.exports = {
+  jsonResponse,
+  imgResponse,
+};
