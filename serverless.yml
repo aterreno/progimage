@@ -28,15 +28,19 @@ provider:
 
 functions:
   ping:
-    handler: src/handler.ping
+    handler: src/handlers/ping.handle
+    events:
+      - http:
+          path: /ping
+          method: get
   upload:
-    handler: src/handler.upload
+    handler: src/handlers/upload.handle
     events:
       - http:
           path: /upload
           method: post
   retrieve:
-    handler: src/handler.retrieve
+    handler: src/handlers/retrieve.handle
     events:
       - http:
           path: /retrieve
