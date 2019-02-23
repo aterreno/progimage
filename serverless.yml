@@ -1,0 +1,25 @@
+service: progimage
+
+package:
+  exclude:    
+    - coverage
+    - tests
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-2	
+  deploymentBucket:
+    name: serverless-lambdas-deployments
+  logRetentionInDays: 30
+  profile: personal
+  environment:
+    DEBUG: ${file(./${opt:stage, 'dev'}.yml):DEBUG}
+
+functions:
+  ping:
+    handler: src/handler.ping
+
+plugins:
+  - serverless-plugin-create-deployment-bucket
