@@ -1,20 +1,29 @@
-# Progimage 
+# Progimage
 
 Install node with nvm:
-```bash
+
+```
 nvm i
 ```
-Install libraries: 
-```bash
+
+Install libraries:
+
+```
 npm i
 ```
+
 Deploy to AWS
 
-```bash
+```
 sls deploy
 ```
+
 Invoke a function
 
-```bash
+```
 sls invoke -f ping
+```
+
+```
+curl -X POST https://js0zcbth7g.execute-api.eu-west-2.amazonaws.com/dev/upload -d @tests/curl.json  --header "Content-Type: application/json"
 ```

@@ -6,7 +6,9 @@
   "scripts": {
     "test": "NODE_ENV=test jest",
     "pretty": "prettier --write **/*.js",
-    "lint": "eslint . --ext .js"
+    "lint": "eslint . --ext .js",
+    "deploy:dev": "sls deploy",
+    "deploy:prod": "sls deploy --stage prod"
   },
   "author": "antonio.terreno@gmail.com",
   "license": "ISC",
@@ -27,7 +29,9 @@
   },
   "dependencies": {
     "aws-sdk": "^2.355.0",
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "filetype": "^0.1.0",
+    "uuid": "^3.3.2"
   },
   "husky": {
     "hooks": {

@@ -15,11 +15,32 @@ provider:
   logRetentionInDays: 30
   profile: personal
   environment:
-    DEBUG: ${file(./${opt:stage, 'dev'}.yml):DEBUG}
+    DEBUG: ${file(./${self:provider.stage}.yml):DEBUG}
+    stage: ${self:provider.stage}
+    bucketName: progimage-${self:provider.stage}-uploads
+    
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:Get*"
+        - "s3:Put*"
+      Resource: arn:aws:s3:::progimage-${self:provider.stage}-uploads/* 
 
 functions:
   ping:
     handler: src/handler.ping
-
+  upload:
+    handler: src/handler.upload
+    events:
+      - http:
+          path: /upload
+          method: post
 plugins:
   - serverless-plugin-create-deployment-bucket
+
+resources:
+  Resources:
+    UploadBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: progimage-${self:provider.stage}-uploads
