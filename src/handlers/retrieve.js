@@ -32,7 +32,11 @@ const handle = async (event, context, callback) => {
       }
     } catch (error) {
       debug(error);
-      callback(null, jsonResponse(error.statusCode, { message: error.message }));
+      if (error.statusCode === 403) {
+        callback(null, jsonResponse(404, { message: 'Not found' }));
+      } else {
+        callback(null, jsonResponse(error.statusCode, { message: error.message }));
+      }
     }
   }
 };

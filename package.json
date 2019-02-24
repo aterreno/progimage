@@ -23,6 +23,8 @@
     "jest": "^24.0.0",
     "lint-staged": "^8.0.4",
     "prettier": "^1.14.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "serverless": "1.38.0",
     "serverless-apigw-binary": "^0.4.4",
     "serverless-apigwy-binary": "^1.0.0",
